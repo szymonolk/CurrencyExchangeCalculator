@@ -21,5 +21,6 @@ public class CurrencyController {
     public ResponseEntity calculateCurrencyFromPlnToOtherCurrency(@PathVariable double pln, @PathVariable String curr){
         return ResponseEntity.ok(currencyService.CalculateFromPLNToOtherCurrency(pln, curr));
     }
+
 }
 
