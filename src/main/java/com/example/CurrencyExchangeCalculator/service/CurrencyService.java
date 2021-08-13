@@ -27,14 +27,17 @@ public class CurrencyService {
         final String url = "http://api.nbp.pl/api/exchangerates/rates/a/"+currency+"?format=json";
         Root root = conf.restTemplateConf().getForObject(url, Root.class);
         double currencyPrice = root.rates.get(0).getMid();
-        currencyModelRepository.save(new CurrencyModel(dateFormatter(),
-                DoubleRounder.round(pln/currencyPrice, 2)));
-        return DoubleRounder.round(pln/currencyPrice, 2);
+        double calculatedValue = DoubleRounder.round(pln/currencyPrice, 2);
+        saveToDB(pln,currency,calculatedValue);
+        return calculatedValue;
     }
 
     public String dateFormatter(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        String date = simpleDateFormat.format(new Date());
-        return date;
+        return simpleDateFormat.format(new Date());
+    }
+
+    public void saveToDB(Double pln, String currency, Double price){
+        currencyModelRepository.save(new CurrencyModel(dateFormatter(), pln, currency, price));
     }
 }
